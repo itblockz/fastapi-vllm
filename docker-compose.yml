@@ -1,0 +1,35 @@
+version: '3.8'
+services:
+  vllm-server:
+    image: vllm/vllm-openai:latest
+    ports:
+      - "8000:8000"
+    command: [
+      "--model", "${MODEL_NAME:-Qwen/Qwen3-30B-A3B}",
+      "--host", "0.0.0.0",
+      "--port", "8000",
+      "--enable-reasoning",
+      "--reasoning-parser", "deepseek_r1"
+    ]
+    volumes:
+      - /mnt/data/.cache/huggingface:/root/.cache/huggingface
+    environment:
+      - CUDA_VISIBLE_DEVICES=0
+      - MODEL_NAME=${MODEL_NAME:-Qwen/Qwen3-30B-A3B}
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+  fastapi-app:
+    build: ./fastapi-service
+    ports:
+      - "4000:4000"
+    environment:
+      - VLLM_URL=http://vllm-server:8000
+      - MODEL_NAME=${MODEL_NAME:-Qwen/Qwen3-30B-A3B}
+    depends_on:
+      - vllm-server
