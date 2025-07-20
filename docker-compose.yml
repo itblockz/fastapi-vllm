@@ -12,7 +12,7 @@ services:
       "--reasoning-parser", "deepseek_r1"
     ]
     volumes:
-      - /mnt/data/.cache/huggingface:/root/.cache/huggingface
+      - /data/.cache/huggingface:/root/.cache/huggingface
     environment:
       - CUDA_VISIBLE_DEVICES=0
       - MODEL_NAME=${MODEL_NAME:-Qwen/Qwen3-30B-A3B}
