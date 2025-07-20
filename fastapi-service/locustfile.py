@@ -7,6 +7,7 @@ class QuestionUser(HttpUser):
         """Load questions from CSV file when user starts"""
         self.questions = []
         try:
+            #path = '/home/siamai/fastapi-vllm/fastapi-service/exanple_question.csv'
             path = '/mnt/data/SCB-dataset/test.csv'
             with open(path, 'r', encoding='utf-8') as file:
                 reader = csv.DictReader(file)
@@ -38,7 +39,7 @@ class QuestionUser(HttpUser):
                 try:
                     json_response = response.json()
                     # Validate response structure
-                    if "answer" in json_response and "total_token" in json_response:
+                    if "answer" in json_response and "raw_output" in json_response:
                         response.success()
                     else:
                         response.failure("Invalid response structure")
