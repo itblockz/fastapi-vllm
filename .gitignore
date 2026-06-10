@@ -1,0 +1,4 @@
+
+# competition / eval question set — keep local, never commit
+fastapi-service/exanple_question.csv
+*.csv
